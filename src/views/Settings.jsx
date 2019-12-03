@@ -15,22 +15,39 @@ const Settings = () => {
     JSON.parse(localStorage.getItem("subreddits")) || []
   );
 
+  function setAndSaveSubreddits(updatedSubreddits) {
+    localStorage.setItem("subreddits", JSON.stringify(updatedSubreddits));
+    setSubreddits(updatedSubreddits);
+  }
+
   function followSubreddit(e) {
     e.preventDefault();
     const newSubredditFollow = e.target.newSubredditFollow.value;
     e.target.newSubredditFollow.value = "";
 
-    const updatedSubreddits = [...subreddits, newSubredditFollow];
+    setAndSaveSubreddits([...subreddits, newSubredditFollow]);
+  }
 
-    localStorage.setItem("subreddits", JSON.stringify(updatedSubreddits));
-    setSubreddits(updatedSubreddits);
+  function deleteFollowedSubreddit(subToRemove) {
+    setAndSaveSubreddits(subreddits.filter(sub => sub !== subToRemove));
   }
 
   function displayFollowedSubreddits() {
     if (subreddits) {
       return subreddits.map(sub => (
         <ListItem key={sub}>
-          <ListItemText>{sub}</ListItemText>
+              <ListItemText>
+                r/
+                {sub}
+              </ListItemText>
+              <ListItemSecondaryAction>
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => deleteFollowedSubreddit(sub)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
         </ListItem>
       ));
     }
