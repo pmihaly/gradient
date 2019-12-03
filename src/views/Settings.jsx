@@ -5,10 +5,15 @@ import {
   Button,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton,
+  Typography,
+  Box
 } from "@material-ui/core";
 import React, { useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const Settings = () => {
   const [subreddits, setSubreddits] = useState(
@@ -33,9 +38,14 @@ const Settings = () => {
   }
 
   function displayFollowedSubreddits() {
-    if (subreddits) {
-      return subreddits.map(sub => (
-        <ListItem key={sub}>
+    if (
+      Object.entries(subreddits).length !== 0 &&
+      subreddits.constructor !== Object
+    ) {
+      return (
+        <List>
+          {subreddits.map(sub => (
+            <ListItem key={sub}>
               <ListItemText>
                 r/
                 {sub}
@@ -48,14 +58,21 @@ const Settings = () => {
                   <DeleteIcon />
                 </IconButton>
               </ListItemSecondaryAction>
-        </ListItem>
-      ));
+            </ListItem>
+          ))}
+        </List>
+      );
     }
+    return (
+      <Typography variant="overline">Add a Subreddit to your feed</Typography>
+    );
   }
 
   return (
     <Container>
-      <List>{displayFollowedSubreddits()}</List>
+      <Box style={{ marginBottom: "3rem", marginTop: "3rem" }}>
+        {displayFollowedSubreddits()}
+      </Box>
 
       <form noValidate autoComplete="off" onSubmit={followSubreddit}>
         <TextField
